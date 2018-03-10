@@ -1,7 +1,17 @@
-var express = require('express');//Importing Express
-var app = express();//Getting App From Express
-const port = 8080;//Creating A Constant For Providing The Port
-var io = require('socket.io').listen(app.listen(port));
+const express = require('express');//Importing Express
+const app = express();//Getting App From Express
+const https = require('https');
+const fs = require('fs');
+const port = 8080;
+var privateKey = fs.readFileSync( 'key.pem' );
+var certificate = fs.readFileSync( 'cert.pem' );
+
+const server = https.createServer({
+    key: privateKey,
+    cert: certificate
+}, app).listen(port);
+
+var io = require('socket.io').listen(server);
 //Routing Request : http://localhost:port/
 sdpData = {};
 app.get('/', function (request, response) {
