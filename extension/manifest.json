@@ -1,0 +1,19 @@
+{
+    "name": "Screen Share",
+    "description": "Screen Sharing",
+    "version": "1.0",
+    "manifest_version": 2,
+    "browser_action": {
+        "default_icon": "hello_extensions.png"
+    },
+    "permissions": [
+        "tabs",
+        "activeTab",
+        "desktopCapture",
+        "tabCapture",
+        "<all_urls>"
+    ],
+    "background": {
+        "scripts": ["background.js"]
+    }
+}
