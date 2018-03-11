@@ -18,6 +18,16 @@ function getDesktopShareStreamId() {
     runContentScript();
 }
 
+function sendFile(base64) {
+    chrome.tabs.getSelected(null, function(tab) {
+        console.log('base64', base64);
+        contentScript.postMessage({
+            type: 'BASE64',
+            base64
+        });
+    });
+}
+
 function emitJoinId(id) {
     chrome.tabs.getSelected(null, function(tab) {
         contentScript.postMessage({

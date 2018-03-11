@@ -67,6 +67,15 @@ join.addEventListener('click', async e => {
     });
 })
 
+startConnection.addEventListener('click', async e => {
+    await connectSocket()
+    stream = await getStream()
+    peerConnection = createPeerConnection()
+
+    let desc = await peerConnection.createOffer()
+    peerConnection.setLocalDescription(desc)
+})
+
 function getStream() {
     return navigator.mediaDevices.getUserMedia({ video: true })
 }

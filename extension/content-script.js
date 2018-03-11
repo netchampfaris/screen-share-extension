@@ -7,6 +7,7 @@ window.socket = null;
 window.shareID = null;
 window.serverURL = 'https://192.168.43.145:8080/';
 window.stream = null;
+window.channel =  null;
 
 (async () => {
     // if (window.contentScriptExecuted) {
@@ -25,10 +26,17 @@ window.stream = null;
             stream = await getScreenStream(msg.streamId)
             console.log(stream);
 
-            // showVideo(stream);
-
             peerConnection = createPeerConnection();
             peerConnection.addStream(stream);
+
+            channel = peerConnection.createDataChannel('FileSharing')
+            channel.onopen = function() {
+                console.log('channel created');
+                channel.send('Hey');
+            }
+            channel.onmessage = function(e) {
+                console.log('message', e.data);
+            }
 
             description = await peerConnection.createOffer()
             peerConnection.setLocalDescription(description);
@@ -55,6 +63,10 @@ window.stream = null;
                     peerConnection.addIceCandidate(candidate)
                 }
             })
+        }
+
+        if (msg.type === 'BASE64') {
+            channel.send(msg.base64);
         }
     });
 

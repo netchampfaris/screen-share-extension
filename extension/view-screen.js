@@ -20,6 +20,27 @@ window.serverURL = 'https://192.168.43.145:8080/';
         })
     }
 
+    peerConnection.ondatachannel = function(e) {
+        channel = e.channel;
+        channel.onopen = function() {
+            console.log('channel open on receiver')
+        }
+        channel.onmessage = function(e) {
+            console.log(e.data)
+
+            if (e.data.startsWith('data:')) {
+                // const a = document.createElement('a')
+                // a.href = e.data
+                // a.text = 'download'
+                // a.target = '_blank'
+                // document.body.appendChild(a)
+
+                var newTab = window.open();
+                newTab.document.body.innerHTML = `<img src="${e.data}" width="100px" height="100px">`;
+            }
+        }
+    }
+
     socket.emit('join_request', shareID);
     socket.on('sdp_for:' + shareID, async sdp => {
 
