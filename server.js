@@ -33,7 +33,6 @@ const getJson = data => {
 
 io.sockets.on("connection", function (socket) {
 	socket.on("payload_from_share", (data) => {
-		data = getJson(data);
 		if (!data.id) return;
 		console.log(data);
 		const id = data.id;
@@ -42,7 +41,6 @@ io.sockets.on("connection", function (socket) {
 	});
 
 	socket.on('join_sdp', (data) => {
-		data = getJson(data);
 		if(!data.id) return
 		console.log('join_sdp:');
 		io.sockets.emit('sdp_for_join:' + data.id, data.joinDescription);
@@ -57,7 +55,6 @@ io.sockets.on("connection", function (socket) {
 	});
 
 	socket.on('joinCandidateData', data => {
-		data = getJson(data)
 		if (!data.id) return;
 		io.sockets.emit('addCandidate:' + data.id, data.candidate)
 	})

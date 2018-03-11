@@ -39,10 +39,10 @@ window.stream = null;
 
             console.log(shareID);
 
-            socket.emit('payload_from_share', JSON.stringify({
+            socket.emit('payload_from_share', {
                 id: shareID,
                 shareDescription: description
-            }));
+            });
 
             socket.on('sdp_for_join:' + shareID, (description) => {
                 console.log('Remote desc', description);
@@ -51,7 +51,9 @@ window.stream = null;
 
             socket.on("addCandidate:" + shareID, candidate => {
                 console.log('adding candidate', candidate)
-                peerConnection.addIceCandidate(candidate)
+                if (candidate) {
+                    peerConnection.addIceCandidate(candidate)
+                }
             })
         }
     });

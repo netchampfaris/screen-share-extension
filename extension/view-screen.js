@@ -14,10 +14,10 @@ window.serverURL = 'https://192.168.43.145:8080/';
 
     peerConnection.onicecandidate = function(e) {
         console.log('join', e);
-        socket.emit('joinCandidateData', JSON.stringify({
+        socket.emit('joinCandidateData', {
             id: shareID,
             candidate: e.candidate
-        }))
+        })
     }
 
     socket.emit('join_request', shareID);
@@ -27,10 +27,10 @@ window.serverURL = 'https://192.168.43.145:8080/';
         description = await peerConnection.createAnswer()
         await peerConnection.setLocalDescription(description)
 
-        socket.emit('join_sdp', JSON.stringify({
+        socket.emit('join_sdp', {
             id: shareID,
             joinDescription: description
-        }));
+        });
     });
 
     function createPeerConnection() {
