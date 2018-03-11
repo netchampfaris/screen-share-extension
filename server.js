@@ -55,6 +55,13 @@ io.sockets.on("connection", function (socket) {
 		// console.log('join_request:' + id);
 		socket.emit('sdp_for:' + id, sdpData[id]);
 	});
+
+	socket.on('joinCandidateData', data => {
+		data = getJson(data)
+		if (!data.id) return;
+		io.sockets.emit('addCandidate:' + data.id, data.candidate)
+	})
+
 })
 //For Tracking When User Disconnects:
 io.sockets.on("disconnect", function (socket) {

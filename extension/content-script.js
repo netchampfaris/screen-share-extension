@@ -5,7 +5,8 @@ window.contentScriptExecuted = false;
 window.peerConnection = null;
 window.socket = null;
 window.shareID = null;
-window.serverURL = 'https://192.168.29.59:8080/';
+window.serverURL = 'https://192.168.43.145:8080/';
+window.stream = null;
 
 (async () => {
     // if (window.contentScriptExecuted) {
@@ -23,6 +24,8 @@ window.serverURL = 'https://192.168.29.59:8080/';
         if (msg.type === 'CREATE_STREAM') {
             stream = await getScreenStream(msg.streamId)
             console.log(stream);
+
+            // showVideo(stream);
 
             peerConnection = createPeerConnection();
             peerConnection.addStream(stream);
@@ -42,9 +45,14 @@ window.serverURL = 'https://192.168.29.59:8080/';
             }));
 
             socket.on('sdp_for_join:' + shareID, (description) => {
-                console.log(description);
+                console.log('Remote desc', description);
                 peerConnection.setRemoteDescription(new RTCSessionDescription(description));
             });
+
+            socket.on("addCandidate:" + shareID, candidate => {
+                console.log('adding candidate', candidate)
+                peerConnection.addIceCandidate(candidate)
+            })
         }
     });
 
@@ -64,6 +72,13 @@ window.serverURL = 'https://192.168.29.59:8080/';
                 }
             }
         });
+    }
+
+    function showVideo(stream) {
+        const video = document.createElement('video');
+        video.autoplay = true
+        video.srcObject = stream;
+        document.body.appendChild(video);
     }
 
     function connectSocket() {
